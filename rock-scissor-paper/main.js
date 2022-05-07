@@ -50,14 +50,22 @@ function playRound(playerSelection, computerSelection) {
         return "Tied!";
     }
 }
+let point = 0;
 
-function game() {
-    for (let index = 0; index < 5; index++) {
-        const playerSelection = prompt("What weapon do you chose?");
-        const computerSelection = computerPlay();
+const buttons = document.querySelectorAll('button');
+const score = document.querySelector('.score');
+buttons.forEach((button) => {
+    // button.addEventListener('click', playRound(button.))
+    button.addEventListener('click', () => {
+        let result = playRound(button.className, computerPlay());
+        console.log(result);
+        if(result === 'You Win!'){
+            point += 1;
+            score.textContent = point;
 
-        console.log(playRound(playerSelection, computerSelection));
-    }
-}
-
-game();
+            if (point == 5){
+                alert('You won the game!');
+            }
+        }
+    });
+});
