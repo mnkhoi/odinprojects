@@ -30,6 +30,7 @@ equal.addEventListener('click', () => {
 });
 
 function appendNumber(number) {
+    if(!'0123456789.'.includes(number)) return;
     if(number === '.' && cur.includes('.')) return;
     cur += number.toString();
 }
@@ -39,8 +40,7 @@ function changeOperation(operation){
     if (past !== ''){
         compute();
     }
-
-    funct = operation.textContent;
+    funct = operation.textContent || operation;
     past = cur;
     cur = '';
 }
@@ -49,6 +49,7 @@ function updateScreen(){
     curText.textContent = cur;
     lastText.textContent = past;
     if(funct !== undefined){
+        if (funct === '*') funct = 'x';
         lastText.textContent += " " + funct;
     }
 }
@@ -70,6 +71,9 @@ function compute() {
         case 'x':
             temp = parseFloat(cur) * parseFloat(past);
             break;
+        case '*':
+            temp = parseFloat(cur) * parseFloat(past);
+            break;
         case '/':
             temp = parseFloat(past) / parseFloat(cur);
             break;
@@ -86,3 +90,19 @@ function clearFunc(){
     past = "";
     funct = undefined;
 }
+
+window.addEventListener('keydown', (e) => {
+    console.log(e.key);
+    if('0123456789.'.includes(e.key)){
+        appendNumber(e.key);
+    }else if('/*-+'.includes(e.key)){
+        changeOperation(e.key);
+    }else if('Backspace'.includes(e.key)){
+        delFunc();
+    }else if('Escape'.includes(e.key)){
+        clearFunc();
+    }else if('Enter'.includes(e.key)){
+        compute();
+    }
+    updateScreen();
+});
